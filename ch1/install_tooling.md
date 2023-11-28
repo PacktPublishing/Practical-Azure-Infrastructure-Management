@@ -1,6 +1,6 @@
 ## Tool Setup Guide for Infrastructure as Code with Terraform and Azure
 
-This guide provides step-by-step instructions for installing the necessary tools to start using Terraform for infrastructure as code.
+Please follow the steps to download and install the necessary tools to start using Terraform for infrastructure as code.
 
 ### 1. Install Terraform CLI
 
