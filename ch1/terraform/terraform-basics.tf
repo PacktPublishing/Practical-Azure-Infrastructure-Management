@@ -22,9 +22,9 @@ resource "azurerm_resource_group" "rg" {
 
 # Create a storage account within resource group
 resource "azurerm_storage_account" "sa" {
-    name                     = "tflearnsa01"
-    resource_group_name      = azurerm_resource_group.rg.name
-    location                 = azurerm_resource_group.rg.location
-    account_tier             = "Standard"
-    account_replication_type = "LRS"
+  name                     = "tflearnsa01"
+  resource_group_name      = azurerm_resource_group.rg.name
+  location                 = azurerm_resource_group.rg.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
 }
