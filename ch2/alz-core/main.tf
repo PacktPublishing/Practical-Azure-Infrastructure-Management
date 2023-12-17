@@ -32,6 +32,6 @@ module "enterprise_scale" {
   }
 
   root_parent_id = data.azurerm_client_config.core.tenant_id
-  root_id        = "myorg"
-  root_name      = "My Organization"
+  root_id        = "iac-alz"
+  root_name      = "IaC ALZ"
 }
