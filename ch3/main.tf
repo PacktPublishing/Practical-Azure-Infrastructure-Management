@@ -127,7 +127,8 @@ resource "azurerm_virtual_machine_extension" "web_server_install" {
 
   settings = <<SETTINGS
     {
-      "commandToExecute": "powershell -ExecutionPolicy Unrestricted Install-WindowsFeature -Name Web-Server -IncludeAllSubFeature -IncludeManagementTools"
+      "fileUris": ["https://raw.githubusercontent.com/PacktPublishing/Practical-Azure-Infrastructure-Management/main/ch3/install-web-server.ps1"],
+      "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File install-web-server.ps1"
     }
   SETTINGS
 }
