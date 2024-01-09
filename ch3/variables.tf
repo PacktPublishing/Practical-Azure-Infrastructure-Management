@@ -9,6 +9,6 @@ variable "resource_group_name" {
 }
 
 variable "vmprefix" {
-  default     = "web"
+  default     = "web01"
   description = "Prefix for all resources."
 }
