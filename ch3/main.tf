@@ -19,12 +19,20 @@ resource "azurerm_subnet" "web_subnet" {
   address_prefixes     = ["10.1.1.0/24"]
 }
 
-# Create public IPs
-resource "azurerm_public_ip" "web_vm_public_ip" {
-  name                = "${var.vmprefix}-public-ip"
+resource "azurerm_subnet" "ag_gateway_subnet" {
+  name                 = "ag-gateway-subnet"
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.vm_app_infra_vnet.name
+  address_prefixes     = ["10.1.2.0/24"]
+}
+
+# Create public for application gateway
+resource "azurerm_public_ip" "ag_public_ip" {
+  name                = "${var.vmprefix}-ag-public-ip"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
+  sku = "Standard"
 }
 
 # Create Network Security Group and rules
@@ -67,16 +75,14 @@ resource "azurerm_network_interface" "web_vm_nic" {
     name                          = "${var.vmprefix}-vm-nic-configuration"
     subnet_id                     = azurerm_subnet.web_subnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.web_vm_public_ip.id
   }
 }
 
-# Connect the security group to the network interface
-resource "azurerm_network_interface_security_group_association" "web_vm_nic_nsg_association" {
-  network_interface_id      = azurerm_network_interface.web_vm_nic.id
+# Connect the security group to the web subnet
+resource "azurerm_subnet_network_security_group_association" "web_subnet_nsg_assoc" {
+  subnet_id                 = azurerm_subnet.web_subnet.id
   network_security_group_id = azurerm_network_security_group.web_subnet_nsg.id
 }
-
 # Create storage account for boot diagnostics
 resource "azurerm_storage_account" "web_storage_account" {
   name                     = "webdiag${random_id.random_id.hex}"
@@ -175,4 +181,89 @@ resource "azurerm_key_vault_secret" "web_vm_password" {
   name = "webvm-password"
   value = random_password.password.result
   key_vault_id = azurerm_key_vault.vm_app_vault.id
+}
+
+resource "azurerm_application_gateway" "app_app_gw" {
+  name = "${var.resource_group_location}-app-gw"
+  resource_group_name = azurerm_resource_group.rg.name
+  location = azurerm_resource_group.rg.location
+  sku {
+    name = "Standard_v2"
+    tier = "Standard_v2"
+    capacity = 2
+  }
+  gateway_ip_configuration {
+    name = "app-gw-ip-config"
+    subnet_id = azurerm_subnet.ag_gateway_subnet.id
+  }
+  frontend_port {
+    name = "app-gw-port"
+    port = 80
+  }
+  frontend_ip_configuration {
+    name = "app-gw-ip-config"
+    public_ip_address_id = azurerm_public_ip.ag_public_ip.id
+  }
+  backend_address_pool {
+    name = "app-gw-backend-pool"
+  }
+  backend_http_settings {
+    name = "app-gw-http-settings"
+    cookie_based_affinity = "Disabled"
+    port = 80
+    protocol = "Http"
+    request_timeout = 60
+  }
+  http_listener {
+    name = "app-gw-http-listener"
+    frontend_ip_configuration_name = "app-gw-ip-config"
+    frontend_port_name = "app-gw-port"
+    protocol = "Http"
+  }
+  request_routing_rule {
+    name = "app-gw-rule"
+    rule_type = "Basic"
+    http_listener_name = "app-gw-http-listener"
+    backend_address_pool_name = "app-gw-backend-pool"
+    backend_http_settings_name = "app-gw-http-settings"
+    priority = 1
+  }
+}
+resource "azurerm_network_interface_application_gateway_backend_address_pool_association" "app_gw_nic_assoc" {
+  network_interface_id = azurerm_network_interface.web_vm_nic.id
+  ip_configuration_name = azurerm_network_interface.web_vm_nic.ip_configuration.0.name
+  backend_address_pool_id = one(azurerm_application_gateway.app_app_gw.backend_address_pool).id
+}
+
+resource "azurerm_subnet" "bastion_subnet" {
+  name = "AzureBastionSubnet"
+  resource_group_name = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.vm_app_infra_vnet.name
+  address_prefixes = ["10.1.3.0/27"]
+  
+}
+
+resource "azurerm_public_ip" "bastion_public_ip" {
+  name = "${var.resource_group_location}-bastion-ip"
+  location = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  allocation_method = "Static"
+  sku = "Standard"
+}
+
+resource "azurerm_bastion_host" "vm_app_bastion" {
+  name = "${var.resource_group_location}-bastion"
+  location = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  sku = "Standard"
+  scale_units = 2
+  copy_paste_enabled = true
+  file_copy_enabled = true
+  shareable_link_enabled = true
+  tunneling_enabled = true
+  ip_configuration {
+    name = "bastion-ip-config"
+    subnet_id = azurerm_subnet.bastion_subnet.id
+    public_ip_address_id = azurerm_public_ip.bastion_public_ip.id
+  }
 }

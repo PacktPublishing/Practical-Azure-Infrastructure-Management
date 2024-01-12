@@ -4,11 +4,11 @@ variable "resource_group_location" {
 }
 
 variable "resource_group_name" {
-  default     = "vm-app-infra-rg"
+  default     = "eu-vm-app-infra-rg"
   description = "Name of the resource group."
 }
 
 variable "vmprefix" {
-  default     = "web01"
+  default     = "euweb01"
   description = "Prefix for all resources."
 }
