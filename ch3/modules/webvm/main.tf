@@ -180,7 +180,7 @@ resource "azurerm_key_vault" "vm_app_vault" {
 }
 
 resource "azurerm_key_vault_secret" "web_vm_password" {
-  name = "${var.vmprefix}-vm-password}"
+  name = "${var.vmprefix}-vm-password"
   value = random_password.password.result
   key_vault_id = azurerm_key_vault.vm_app_vault.id
 }
