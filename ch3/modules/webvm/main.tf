@@ -8,7 +8,7 @@ resource "azurerm_resource_group" "rg" {
 # Create virtual network
 resource "azurerm_virtual_network" "vm_app_infra_vnet" {
   name                = "${var.resource_group_location}-vnet"
-  address_space       = ["10.1.0.0/16"]
+  address_space       = var.resource_group_location == "westeurope" ? ["10.1.0.0/16"] : ["10.2.0.0/16"]
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 }
@@ -18,14 +18,14 @@ resource "azurerm_subnet" "web_subnet" {
   name                 = "web-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vm_app_infra_vnet.name
-  address_prefixes     = ["10.1.1.0/24"]
+  address_prefixes     = var.resource_group_location == "westeurope" ? ["10.1.1.0/24"] : ["10.2.2.0/24"]
 }
 
 resource "azurerm_subnet" "ag_gateway_subnet" {
   name                 = "ag-gateway-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vm_app_infra_vnet.name
-  address_prefixes     = ["10.1.2.0/24"]
+  address_prefixes     = var.resource_group_location == "westeurope" ? ["10.1.2.0/24"] : ["10.2.2.0/24"] 
 }
 
 # Create public for application gateway
@@ -180,7 +180,7 @@ resource "azurerm_key_vault" "vm_app_vault" {
 }
 
 resource "azurerm_key_vault_secret" "web_vm_password" {
-  name = "webvm-password"
+  name = "${var.vmprefix}-vm-password}"
   value = random_password.password.result
   key_vault_id = azurerm_key_vault.vm_app_vault.id
 }
@@ -241,8 +241,7 @@ resource "azurerm_subnet" "bastion_subnet" {
   name = "AzureBastionSubnet"
   resource_group_name = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vm_app_infra_vnet.name
-  address_prefixes = ["10.1.3.0/27"]
-  
+  address_prefixes = var.resource_group_location == "westeurope" ? ["10.1.3.0/27"] : ["10.2.3.0/27"] 
 }
 
 resource "azurerm_public_ip" "bastion_public_ip" {
