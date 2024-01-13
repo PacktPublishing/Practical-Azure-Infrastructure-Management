@@ -18,7 +18,7 @@ resource "azurerm_subnet" "web_subnet" {
   name                 = "web-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vm_app_infra_vnet.name
-  address_prefixes     = var.resource_group_location == "westeurope" ? ["10.1.1.0/24"] : ["10.2.2.0/24"]
+  address_prefixes     = var.resource_group_location == "westeurope" ? ["10.1.1.0/24"] : ["10.2.1.0/24"]
 }
 
 resource "azurerm_subnet" "ag_gateway_subnet" {
