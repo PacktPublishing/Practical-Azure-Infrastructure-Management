@@ -2,7 +2,7 @@ name: 'Deploy Chapter 3'
 on:
  push:
   branches: ["main"]
- workflow_call:
+ workflow_dispatch:
 
 jobs:
   terraform:
