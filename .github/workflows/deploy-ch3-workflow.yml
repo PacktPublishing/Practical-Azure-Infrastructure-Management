@@ -5,11 +5,6 @@ on:
  workflow_dispatch:
 
 jobs:
-  smapleprint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: print step
-        run: echo This is sample print
   terraform-unit-tests:
     runs-on: ubuntu-latest
     name: 'Terraform Unit Tests'
@@ -17,20 +12,19 @@ jobs:
       run:
         shell: bash
         working-directory: ./ch3
-    
     steps:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v3
-
+    
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
-
+    
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
       run: terraform init -backend=false
-
+   
     # Validate terraform files
     - name: Terraform Validate
       run: terraform validate
