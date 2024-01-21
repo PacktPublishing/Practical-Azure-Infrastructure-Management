@@ -53,6 +53,10 @@ jobs:
       ARM_SKIP_PROVIDER_REGISTRATION: true
     outputs:
       tfplanExitCode: ${{ steps.tf-plan.outputs.exitcode }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./ch3
 
     steps:
     # Checkout the repository to the GitHub Actions runner
