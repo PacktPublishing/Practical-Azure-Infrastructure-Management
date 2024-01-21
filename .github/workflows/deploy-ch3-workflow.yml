@@ -49,6 +49,7 @@ jobs:
   terraform-plan:
     name: 'Terraform Plan'
     runs-on: ubuntu-latest
+    needs: [terraform-unit-tests]
     env:
       #this is needed since we are running terraform with read-only permissions
       ARM_SKIP_PROVIDER_REGISTRATION: true
@@ -100,7 +101,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: tfplan
-        path: tfplan
+        path: ./ch3/tfplan
         
     # Create string output of Terraform Plan
     - name: Create String Output
