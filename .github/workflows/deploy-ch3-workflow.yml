@@ -54,6 +54,6 @@ jobs:
       if: success() || failure()
       uses: github/codeql-action/upload-sarif@v2
       with:
-        sarif_file: ./ch3/results.sarif
+        sarif_file: results.sarif
         category: checkov
  
