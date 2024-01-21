@@ -150,6 +150,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: prod
     needs: [terraform-plan]
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./ch3
     
     steps:
     # Checkout the repository to the GitHub Actions runner
