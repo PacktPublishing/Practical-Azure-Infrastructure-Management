@@ -170,6 +170,9 @@ jobs:
       with:
         name: tfplan
         path: ./ch3
+    
+    - name: Show files
+      run: ls -a
 
     # Terraform Apply
     - name: Terraform Apply
