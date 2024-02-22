@@ -15,5 +15,6 @@ variable "container_info" {
       image = string
       name = string 
       port = number
+      public = bool
     })
 }

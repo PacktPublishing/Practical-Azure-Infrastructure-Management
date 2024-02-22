@@ -1,9 +1,16 @@
+# Chapter 6
+
+## Create Container Apps environment
+```
 module "container_env" {
 source = "./modules/ace"
  ace_name = "bookaceeu"
  ace_resource_group_name = "ace-infra-eu-rg"
  location = "westeurope"
 }
+```
+## Create Container App with image from a public repository
+```
 module "public_imaage_aca" {
     source = "./modules/aca"
     aca_name = "iacacapubimg"
@@ -18,3 +25,16 @@ module "public_imaage_aca" {
     }
     depends_on = [ module.container_env ]
 }
+```
+## Create Container Apps Repository
+```
+module "container_registry" {
+    source = "./modules/acr"
+    acr_name = "iacbookacr"
+    acr_resource_group_name = "iac-book-acr-rg"
+    location = "westeurope"
+}
+```
+## Build Container Image and push to ACR
+
+## Deploy Container Apps with image from ACR

@@ -9,7 +9,7 @@ resource "azurerm_container_app" "aca_app" {
   resource_group_name          = var.ace_resource_group_name
   revision_mode                = "Single"
   ingress {
-    external_enabled = true
+    external_enabled = var.container_info.public
     target_port = var.container_info.port
     traffic_weight {
       percentage = 100
