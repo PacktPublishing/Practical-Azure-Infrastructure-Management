@@ -22,10 +22,10 @@ resource "azurerm_subnet" "ace_web_subnet" {
 
 # Container Apps environment
 resource "azurerm_container_app_environment" "ace" {
-    name = var.ace_name
-    location = var.location
-    resource_group_name = azurerm_resource_group.ace_rg.name
-    infrastructure_subnet_id = azurerm_subnet.ace_web_subnet.id
+  name                     = var.ace_name
+  location                 = var.location
+  resource_group_name      = azurerm_resource_group.ace_rg.name
+  infrastructure_subnet_id = azurerm_subnet.ace_web_subnet.id
 }
 
 output "ace_name" {

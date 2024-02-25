@@ -1,14 +1,14 @@
 # Resource group for Azure Container registry
 
 resource "azurerm_resource_group" "acr_rg" {
-    name = var.acr_resource_group_name
-    location = var.location
+  name     = var.acr_resource_group_name
+  location = var.location
 }
 
 resource "azurerm_user_assigned_identity" "umi" {
-    name = "umi-${var.acr_name}"
-    location = var.location
-    resource_group_name = azurerm_resource_group.acr_rg.name
+  name                = "umi-${var.acr_name}"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.acr_rg.name
 }
 
 # Azure Container Registry for hosting private container images
@@ -38,7 +38,7 @@ resource "azurerm_role_assignment" "acr_pull_role" {
   scope              = azurerm_container_registry.acr.id
   role_definition_id = data.azurerm_role_definition.acr_pull.id
   principal_id       = azurerm_user_assigned_identity.umi.principal_id
-  principal_type = "ServicePrincipal"
+  principal_type     = "ServicePrincipal"
 }
 output "acr_name" {
   value = azurerm_container_registry.acr.name

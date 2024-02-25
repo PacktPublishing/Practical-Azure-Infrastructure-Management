@@ -8,20 +8,20 @@ variable "location" {
   description = "name of the azure region"
 }
 variable "aca_name" {
-    description = "name of the container app"
+  description = "name of the container app"
 }
 variable "container_info" {
-    type = object({
-      image = string
-      name = string 
-      port = number
-      public = bool
-    })
+  type = object({
+    image  = string
+    name   = string
+    port   = number
+    public = bool
+  })
 }
 
 variable "acr_name" {
   description = "name of the Azure Container Registry"
-  
+
 }
 
 variable "acr_resource_group_name" {
@@ -30,5 +30,5 @@ variable "acr_resource_group_name" {
 
 variable "umi_name" {
   description = "name of the user-managed identity"
-  
+
 }

@@ -5,6 +5,6 @@ variable "acr_name" {
   description = "name of the Azure Container Registry"
 }
 variable "location" {
-    description = "Name of the Azure region"
-  
+  description = "Name of the Azure region"
+
 }
