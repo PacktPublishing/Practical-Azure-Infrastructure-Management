@@ -208,7 +208,7 @@ jobs:
          az acr build --registry iacbookacr --image "bookapp/demo:v1" --file ch6/bookapp/bookapp/Dockerfile ch6/bookapp 
 
   deploy-container-image:
-    name: 'Terraform Apply'
+    name: 'Deploy Container Image To ACA'
     needs: [build-container-image]
     runs-on: ubuntu-latest
     environment: prod
@@ -229,17 +229,10 @@ jobs:
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
       run: terraform init
-
-    # Download saved plan from artifacts  
-    - name: Download Terraform Plan
-      uses: actions/download-artifact@v3
-      with:
-        name: tfplan
-        path: ./ch6/bookapp/infra
     
     - name: Show files
       run: ls -a
 
     # Terraform Apply
     - name: Terraform Apply
-      run: terraform apply -auto-approve tfplan
+      run: terraform apply -auto-approve
