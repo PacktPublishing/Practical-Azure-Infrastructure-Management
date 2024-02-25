@@ -181,3 +181,26 @@ jobs:
     # Terraform Apply
     - name: Terraform Apply
       run: terraform apply -auto-approve tfplan
+  build-container-image:
+    name: 'Build Container Image'
+    runs-on: ubuntu-latest
+    needs: [terraform-apply]
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./ch6
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Azure CLI script
+      uses: azure/CLI@v1
+      with:
+        azcliversion: latest
+        inlineScript: |
+          az account show
