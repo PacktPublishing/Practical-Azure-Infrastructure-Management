@@ -98,3 +98,9 @@ local-login.ps1
 local-login.sh
 .vscode/launch.json
 ch3/tfplan
+ch6/bookapp/.vs/*
+ch6/bookapp/bin/*
+ch6/bookapp/obj/*
+ch6/bookapp/bookapp/bin/*
+ch6/bookapp/bookapp/obj/*
+
