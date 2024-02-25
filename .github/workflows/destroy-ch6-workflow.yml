@@ -1,4 +1,4 @@
-name: 'Destroy Chapter 3'
+name: 'Destroy Chapter 6'
 on:
  workflow_dispatch:
 
