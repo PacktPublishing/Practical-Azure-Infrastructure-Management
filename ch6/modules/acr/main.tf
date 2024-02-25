@@ -29,6 +29,9 @@ resource "azurerm_container_registry" "acr" {
     tags                    = {}
   }
 }
+data "azurerm_role_definition" "acr_pull" {
+  role_definition_id = "7f951dda-4ed3-4680-a7ca-43fe172d538d"
+}
 
 # assign AcrPull Role to umi
 resource "azurerm_role_assignment" "acr_pull_role" {
@@ -37,11 +40,6 @@ resource "azurerm_role_assignment" "acr_pull_role" {
   principal_id       = azurerm_user_assigned_identity.umi.principal_id
   principal_type = "ServicePrincipal"
 }
-
-data "azurerm_role_definition" "acr_pull" {
-  role_definition_id = "7f951dda-4ed3-4680-a7ca-43fe172d538d"
-}
-
 output "acr_name" {
   value = azurerm_container_registry.acr.name
 }
@@ -50,6 +48,15 @@ output "acr_rg_name" {
   value = azurerm_resource_group.acr_rg.name
 }
 
+output "umi_id" {
+  value = azurerm_user_assigned_identity.umi.id
+}
+
 output "umi_name" {
   value = azurerm_user_assigned_identity.umi.name
+
+}
+
+output "acr_hostname" {
+  value = azurerm_container_registry.acr.login_server
 }

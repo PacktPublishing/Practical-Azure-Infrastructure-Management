@@ -18,3 +18,17 @@ variable "container_info" {
       public = bool
     })
 }
+
+variable "acr_name" {
+  description = "name of the Azure Container Registry"
+  
+}
+
+variable "acr_resource_group_name" {
+  description = "name of the resource group for container registry"
+}
+
+variable "umi_name" {
+  description = "name of the user-managed identity"
+  
+}

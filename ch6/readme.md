@@ -36,5 +36,27 @@ module "container_registry" {
 }
 ```
 ## Build Container Image and push to ACR
-
+```
+az acr build --registry iacbookacr --image "bookapp/demo:v1" --file bookapp/bookapp/Dockerfile bookapp 
+```
 ## Deploy Container Apps with image from ACR
+```
+module "private_image_aca" {
+    source = "./modules/aca"
+    aca_name = "iacacapriimg"
+    ace_name = module.container_env.ace_name
+    ace_resource_group_name = module.container_env.ace_rg_name
+    location = "westeurope"
+    acr_name = module.container_registry.acr_name
+    acr_resource_group_name = module.container_registry.acr_rg_name
+    umi_name = module.container_registry.umi_name
+    container_info = {
+      image = "iacbookacr.azurecr.io/bookapp/demo:v1"
+      name = "pricontainer"
+      port = 80
+      public = true
+    }
+    depends_on = [ module.container_env,
+    module.container_registry]
+}
+```
