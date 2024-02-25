@@ -195,12 +195,14 @@ jobs:
       uses: actions/checkout@v3
 
     - uses: azure/login@v1
+      name: Login to Azure
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     
-    - name: Azure CLI script
+    - name: Build and Publish Container Image
       uses: azure/CLI@v1
       with:
         azcliversion: latest
         inlineScript: |
-          az account show
+          az acr build --registry iacbookacr --image "bookapp/demo:latest" --file bookapp/bookapp/Dockerfile bookapp
+        working-directory: ./ch6
