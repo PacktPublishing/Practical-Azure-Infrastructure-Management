@@ -209,6 +209,7 @@ jobs:
 
   deploy-container-image:
     name: 'Terraform Apply'
+    needs: [build-container-image]
     runs-on: ubuntu-latest
     environment: prod
     defaults:
