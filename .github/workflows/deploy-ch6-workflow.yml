@@ -181,6 +181,7 @@ jobs:
     # Terraform Apply
     - name: Terraform Apply
       run: terraform apply -auto-approve tfplan
+  
   build-container-image:
     name: 'Build Container Image'
     runs-on: ubuntu-latest
@@ -205,3 +206,39 @@ jobs:
         azcliversion: latest
         inlineScript: |
          az acr build --registry iacbookacr --image "bookapp/demo:v1" --file ch6/bookapp/bookapp/Dockerfile ch6/bookapp 
+
+  deploy-container-image:
+    name: 'Terraform Apply'
+    runs-on: ubuntu-latest
+    environment: prod
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./ch6/bookapp/infra
+    
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform Init
+      run: terraform init
+
+    # Download saved plan from artifacts  
+    - name: Download Terraform Plan
+      uses: actions/download-artifact@v3
+      with:
+        name: tfplan
+        path: ./ch6/bookapp/infra
+    
+    - name: Show files
+      run: ls -a
+
+    # Terraform Apply
+    - name: Terraform Apply
+      run: terraform apply -auto-approve tfplan
