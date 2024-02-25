@@ -42,6 +42,7 @@ jobs:
 
   terraform-destroy:
     name: 'Destroy ACC and ACR'
+    needs: destroy-bookapp-container
     runs-on: ubuntu-latest
     environment: prod
     defaults:
