@@ -204,4 +204,4 @@ jobs:
       with:
         azcliversion: latest
         inlineScript: |
-          az acr build --registry iacbookacr --image "bookapp/demo:latest" --file bookapp/bookapp/Dockerfile bookapp
+          ls
