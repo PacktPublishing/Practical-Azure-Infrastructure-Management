@@ -1,0 +1,11 @@
+#cloud-config
+packages:
+  - python3-pip
+package_upgrade: true
+runcmd:
+  - sudo apt-get update
+  - sudo apt install software-properties-common
+  - sudo apt-add-repository --yes --update ppa:ansible/ansible
+  - sudo apt install --yes ansible
+  - sudo ansible-galaxy collection install azure.azcollection --force
+  - sudo pip3 install -r /root/.ansible/collections/ansible_collections/azure/azcollection/requirements-azure.txt
