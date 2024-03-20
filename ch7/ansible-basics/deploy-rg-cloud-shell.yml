@@ -1,0 +1,13 @@
+- name: Create Resource Group
+  hosts: localhost
+  connection: local
+  roles:
+    - { role: azure.azure_preview_modules }
+  vars:
+    resource_group: demo-rg
+    location: eastus
+  tasks:
+    - name: Create a resource group
+      azure_rm_resourcegroup:
+        name: "{{ resource_group }}"
+        location: "{{ location }}"
