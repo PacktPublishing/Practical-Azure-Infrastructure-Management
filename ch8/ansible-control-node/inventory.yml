@@ -1,0 +1,14 @@
+windowsvm:
+  hosts:
+    winvm1:
+      ansible_host: 40.118.29.215
+      ansible_user: adminuser
+      ansible_password: "Password123!"
+      ansible_connection: winrm
+      ansible_winrm_server_cert_validation: ignore
+linuxvm:
+  hosts:
+    linuxvm1:
+      ansible_host: 13.95.221.252
+      ansible_user: adminuser
+      ansible_password: "Password123!"

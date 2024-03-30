@@ -1,0 +1,23 @@
+- name: Install IIS
+  hosts: windowsvm
+  gather_facts: true
+  vars_prompt:
+    - name: username
+      prompt: "Enter local username"
+      private: false
+    - name: password
+      prompt: "Enter password"
+
+  vars:
+    ansible_user: "{{ username }}"
+    ansible_password: "{{ password }}"
+    ansible_connection: winrm
+    ansible_winrm_transport: ntlm
+    ansible_winrm_server_cert_validation: ignore
+  tasks:
+   - win_feature:
+       name: Web-Server
+       state: present
+       restart: yes
+       include_sub_features: yes
+       include_management_tools: yes
