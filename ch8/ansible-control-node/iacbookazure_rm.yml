@@ -1,0 +1,7 @@
+plugin: azure_rm
+include_vm_resource_groups:
+  - iac-book-nodes-rg
+auth_source: auto
+conditional_groups:
+  linuxvm: "'UbuntuServer' in image.offer"
+  windowsvm: "'WindowsServer' in image.offer"
